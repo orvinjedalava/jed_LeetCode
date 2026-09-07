@@ -36,11 +36,23 @@ It is guaranteed for each appearance of the character '*', there will be a previ
 */
 public class RegularExpressionMatching
 {
+    /*
+    Core idea: dp[i, j] answers "does s[i..] match p[j..]?" (the remaining suffixes of both strings, starting at index i in s and j in p). 
+    We build this table from the end of both strings backward to the beginning, 
+    since matching a * requires knowing about future/shorter suffixes first.
+    */
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="s">Input String</param>
+    /// <param name="p">Regex Pattern</param>
+    /// <returns></returns>
     public static bool Invoke(string s, string p)
     {
         int m = s.Length, n = p.Length;
+        // dp[i, j] = true if s[i..] matches p[j..]
         bool[,] dp = new bool[m + 1, n + 1];
-        dp[m, n] = true;
+        dp[m, n] = true; // empty Input String matches empty Regex Pattern
 
         for (int i = m; i >= 0; i--)
         {
@@ -50,10 +62,12 @@ public class RegularExpressionMatching
 
                 if (j + 1 < n && p[j + 1] == '*')
                 {
+                    // zero occurrences (skip "x*") OR one+ occurrences (consume s[i], stay on same pattern position)
                     dp[i, j] = dp[i, j + 2] || (firstMatch && dp[i + 1, j]);
                 }
                 else
                 {
+                    // no '*': consume one char from both s and p
                     dp[i, j] = firstMatch && dp[i + 1, j + 1];
                 }
             }
