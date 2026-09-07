@@ -40,15 +40,23 @@ public class LongestPalindrome
         return s.Substring(start, maxLength);
     }
 
+    /*
+    Checks how far a palindrome extends outward from a given center point, and updates the best (longest) result found so far.
+    */
     private static void ExpandAroundCenter(string s, int left, int right, ref int start, ref int maxLength)
     {
+        // expand from the reference point outwards as long as characters match or word's length is reached.
         while (left >= 0 && right < s.Length && s[left] == s[right])
         {
             left--;
             right++;
         }
 
+        // After the loop, the actual palindrome boundaries are left + 1 to right - 1. So the length is:
+        // length=(right−1)−(left+1)+1=right−left−1
         int length = right - left - 1;
+
+        // if this center produced a longer palindrome than any seen before, record its starting index (left + 1) and length.
         if (length > maxLength)
         {
             start = left + 1;
