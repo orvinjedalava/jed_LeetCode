@@ -52,12 +52,13 @@ public class RegularExpressionMatching
         int m = s.Length, n = p.Length;
         // dp[i, j] = true if s[i..] matches p[j..]
         bool[,] dp = new bool[m + 1, n + 1];
-        dp[m, n] = true; // empty Input String matches empty Regex Pattern
+        dp[m, n] = true; // empty Input String matches empty Regex Pattern, or s + 1 and p + 1 is always true
 
         for (int i = m; i >= 0; i--)
         {
             for (int j = n - 1; j >= 0; j--)
             {
+                // note: also consider regexpattern with * (e.g. "a*" will match "" as it's "A or nothing")
                 bool firstMatch = i < m && (p[j] == s[i] || p[j] == '.');
 
                 if (j + 1 < n && p[j + 1] == '*')
